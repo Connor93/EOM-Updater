@@ -1,0 +1,41 @@
+{
+    "name": "http-zip-sync-gui",
+    "version": "1.0.0",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "dist": "electron-builder"
+    },
+    "dependencies": {
+        "adm-zip": "^0.5.10",
+        "axios": "^1.6.0",
+        "fs-extra": "^11.1.1"
+    },
+    "devDependencies": {
+        "electron-builder": "^24.6.0",
+        "electron": "^30.0.0"
+    },
+    "build": {
+        "appId": "com.example.httpsync",
+        "productName": "HTTP Zip Sync",
+        "directories": {
+            "output": "dist"
+        },
+        "files": [
+            "main.js",
+            "renderer/**/*",
+            "src/**/*",
+            "config/**/*",
+            "package.json"
+        ],
+        "win": {
+            "target": [
+                {
+                    "target": "portable",
+                    "arch": "x64"
+                }
+            ],
+            "artifactName": "${productName}-${version}-portable.exe"
+        }
+    }
+}
