@@ -25,6 +25,7 @@
             "main.js",
             "renderer/**/*",
             "src/**/*",
+            "img/**/*",
             "config/**/*",
             "package.json"
         ],
