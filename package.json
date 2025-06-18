@@ -1,5 +1,5 @@
 {
-    "name": "http-zip-sync-gui",
+    "name": "eom-client-updater",
     "version": "1.0.0",
     "main": "main.js",
     "scripts": {
@@ -16,8 +16,8 @@
         "electron": "^30.0.0"
     },
     "build": {
-        "appId": "com.example.httpsync",
-        "productName": "HTTP Zip Sync",
+        "appId": "com.example.eomclientupdater",
+        "productName": "EOM Client Updater",
         "directories": {
             "output": "dist"
         },
@@ -35,7 +35,7 @@
                     "arch": "x64"
                 }
             ],
-            "artifactName": "${productName}-${version}-portable.exe"
+            "artifactName": "${productName}-${version}.exe"
         }
     }
 }
