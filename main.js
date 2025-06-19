@@ -1,17 +1,23 @@
 const path = require('path');
-const { app, BrowserWindow, ipcMain } = require('electron');
-const { syncViaZip } = require('./src/httpZipSync');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { spawn } = require('child_process');
 
 function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     autoHideMenuBar: true,
-    webPreferences: { nodeIntegration: true, contextIsolation: false }
+    show: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
   });
+
   win.loadFile('renderer/index.html');
 
-  win.webContents.once('did-finish-load', () => {
+  win.once('ready-to-show', () => {
+    win.show();
     win.webContents.send('auto-start-sync');
   });
 }
@@ -19,11 +25,25 @@ function createWindow() {
 app.whenReady().then(createWindow);
 
 ipcMain.handle('start-sync', async (event) => {
-  // Use the folder where the .exe is located (portable app folder)
-  const execBase = process.env.PORTABLE_EXECUTABLE_DIR;
+  const { syncViaZip } = require('./src/httpZipSync'); 
+  const execBase = process.env.PORTABLE_EXECUTABLE_DIR || process.cwd();
   return await syncViaZip(execBase, (msg) => {
     event.sender.send('sync-progress', msg);
   }, (percent) => {
     event.sender.send('sync-progress-percent', percent);
+    if (percent >= 100) {
+      event.sender.send('update-complete');
+    }
   });
 });
+
+
+const { shell } = require('electron');
+
+ipcMain.on('launch-game', () => {
+  const baseDir = process.env.PORTABLE_EXECUTABLE_DIR || process.cwd();
+  const exePath = path.join(baseDir, 'endless.exe');
+  shell.openPath(exePath);
+  app.quit();
+});
+
