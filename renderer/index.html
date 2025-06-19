@@ -3,53 +3,22 @@
 
 <head>
     <title>Endless Memories Client Updater</title>
-    <style>
-        body {
-            background-image: url(../img/back_night.jpg);
-            font-family: sans-serif;
-            margin: 2em;
-            color: white;
-        }
-
-        progress {
-            width: 100%;
-            height: 20px;
-        }
-
-        h1 {
-            height: 200px;
-            background-position: top;
-            background-image: url('../img/banner2.webp');
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
 <body>
-    <h1></h1>
-    <progress id="progressBar" value="0" max="100"></progress>
-    <pre id="output"></pre>
-
-    <script>
-        const { ipcRenderer } = require('electron');
-
-        function log(msg) {
-            const out = document.getElementById('output');
-            out.textContent += `\n${msg}`;
-        }
-
-        ipcRenderer.on('sync-progress', (_, msg) => log(msg));
-        ipcRenderer.on('sync-progress-percent', (_, percent) => {
-            document.getElementById('progressBar').value = percent;
-        });
-
-        ipcRenderer.on('auto-start-sync', () => {
-            document.getElementById('output').textContent = '';
-            document.getElementById('progressBar').value = 0;
-            ipcRenderer.invoke('start-sync', { localDir: '' })
-                .then(msg => log(msg))
-                .catch(err => log('Error: ' + err));
-        });
-    </script>
+    <div class="container">
+      <img src="../img/banner2.webp">
+      <div class="news"></div>
+    </div>
+    <footer>
+      <pre id="output" class="output">Preparing update...</pre>
+      <div class="loading">
+        <progress id="progressBar" value="0" max="100"></progress>
+        <button id="playBtn" disabled>Play Game</button>
+      </div> 
+    </footer>
+    
+<script src="../src/uiController.js"></script>
 </body>
-
 </html>

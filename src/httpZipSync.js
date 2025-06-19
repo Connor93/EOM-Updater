@@ -32,6 +32,7 @@ async function syncViaZip(localDir, onProgress, onPercent) {
       res = await axios.get(versionCheckUrl);
     } catch (err) {
       onProgress('Failed to contact update server: ' + err.message);
+      if (onPercent) onPercent(100);
       return 'Update check failed. Please try again later.';
     }
 
@@ -39,6 +40,7 @@ async function syncViaZip(localDir, onProgress, onPercent) {
 
     if (!updateUrl) {
       onProgress('No update required. You are using the latest version.');
+      if (onPercent) onPercent(100);
       return 'No update needed. Version is up to date.';
     }
 
@@ -90,7 +92,7 @@ async function syncViaZip(localDir, onProgress, onPercent) {
       if (entry.isDirectory) return;
 
       if (entry.entryName.startsWith('resources/') || entry.entryName.includes('app.asar')) {
-        return; // skip system/internal files
+        return; 
       }
 
       const fullPath = path.join(targetDir, entry.entryName);
