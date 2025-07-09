@@ -42,21 +42,27 @@ ipcRenderer.on('sync-progress', (_, msg) => log(msg));
 
 ipcRenderer.on('sync-progress-percent', (_, percent) => {
   progressBar.value = percent;
-  if (percent >= 100) enablePlayButton();
 });
-
-ipcRenderer.on('update-complete', () => enablePlayButton());
 
 ipcRenderer.on('auto-start-sync', () => {
   output.textContent = '';
   progressBar.value = 0;
   playBtn.disabled = true;
   playBtn.classList.remove('enabled');
-  loadNews(); 
+  loadNews();
+
   ipcRenderer.invoke('start-sync', { localDir: '' })
     .then(msg => {
       log(msg);
-      if (msg.toLowerCase().includes('no updates')) enablePlayButton();
+      const lowerMsg = msg.toLowerCase();
+      const completionMessages = [
+        'no update needed. version is up to date.',
+        'update check failed. please try again later.',
+        'update download failed. please try again later.'
+      ];
+      if (completionMessages.some(m => lowerMsg.includes(m))) {
+        enablePlayButton();
+      }
     })
     .catch(err => log('Error: ' + err));
 });
